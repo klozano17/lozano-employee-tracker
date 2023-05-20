@@ -4,9 +4,9 @@ require("console.table");
 //const queries = require('./queries/queries.js');
 
 const db = mysql.createConnection({
-    host: "localhost",
+    host: "127.0.0.1",
     port: 3306,
-    User: "root",
+    user: "root",
     password: "Eliasramon2020!",
     database: "employee_db",
 });
