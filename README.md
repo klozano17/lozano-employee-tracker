@@ -4,8 +4,8 @@
 This is a command-line app that keeps track of an employee database.  Using inquirer, the user can view prompts of different tasks such as view all department, roles, and employees; along with, adding a new department, role, and updating an existing employee by using mysql. 
 
 ## Links
-- [github repo](https://github.com/erinsawyer504/emerald-employee-tracker)
-- [Video Demo](https://drive.google.com/file/d/1tFD3GZCCvZJLEk451Qlv1TbmNlZKTe1i/view)
+- [github repo](https://github.com/klozano17/lozano-employee-tracker)
+- [Video Demo](https://drive.google.com/file/d/1OHwh7dVS5d-Zop_z7ggKMJGg67sL2nic/view)
 
 ## Table of Contents
 - [Installation](#installation)  
@@ -16,7 +16,7 @@ This is a command-line app that keeps track of an employee database.  Using inqu
 - [Questions](#questions)
 
 ## Installation
-Clone the repo into your vs code, install inquirer if needed by typing "npm i inquirer@8.2.4" in the terminal and run it by typing "node index.js".  This application also requires node.js and mysql2 to be installed.  To start the application, just type npm start in your console.
+Clone the repo into your vs code, install inquirer if needed by typing "npm i inquirer@8.2.4" in the terminal and run it by typing "node index.js". Make sure to have mysql installed and run the schema.sql and seed.sql files in mysql workbench.
 
 ## Usage
 Here is a screenshot that shows how the app runs
@@ -32,7 +32,6 @@ To contribute to this application, just fork the repository!
 This application does not use any tests.
 
 ## Questions
-GitHub username: erinsawyer504, 
-[GitHub profile](https://www.github.com/erinsawyer504)    
-Email address: erinsawyer504@gmail.com  
+[GitHub profile](https://www.github.com/klozano17)    
+
 If you have additional questions, please feel free to email me.
