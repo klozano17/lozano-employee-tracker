@@ -15,46 +15,62 @@ const pool = mysql.createPool({
 // Define query functions
 
 async function getAllDepartments() {
-  const [rows] = await pool.query('SELECT * FROM department');
+  const [rows] = await pool.query('SELECT * FROM departments');
     return rows;
 }
 
 async function getAllRoles() {
     const [rows] = await pool.query(`
-        SELECT role.id, role.title, role.salary, department.name AS department
-        FROM role
-        LEFT JOIN department ON role.department_id = department.id`);
+        SELECT roles.id, roles.title, roles.salary, departments.name AS department
+        FROM roles
+        LEFT JOIN departments ON roles.departments_id = departments.id`);
     return rows;
 }
 
 async function getAllEmployees() {
     const [rows] = await pool.query(`
-        SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, role.salary, CONCAT(manager.first_name, ' ', manager.last_name) AS manager
-        FROM employee
-        LEFT JOIN role ON employee.role_id = role.id
-        LEFT JOIN department ON role.department_id = department.id
-        LEFT JOIN employee AS manager ON employee.manager_id = manager.id`);
+        SELECT employees.id, employees.first_name, employees.last_name, roles.title, departments.name AS departments, roles.salary, CONCAT(managers.first_name, ' ', managers.last_name) AS managers
+        FROM employees
+        LEFT JOIN roles ON employees.roles_id = roles.id
+        LEFT JOIN departments ON roles.departments_id = departments.id
+        LEFT JOIN employees AS managers ON employees.managers_id = managers.id`);
     return rows;
 }
 
-async function addDepartment(name) {
-    const [result] = await pool.query('INSERT INTO department SET ?', { name });
+async function addDepartments(name) {
+    const [result] = await pool.query('INSERT INTO departments SET ?', { name });
         return result.insertId;
 }
 
-async function addRole(title, salary, departmentId) {
-    const [result] = await pool.query('INSERT INTO role SET ?', { title, salary, department_id: departmentId });
+async function addRoles(title, salary, departmentsId) {
+    const [result] = await pool.query('INSERT INTO roles SET ?', { title, salary, departments_id: departmentsId });
         return result.insertId;
 }
 
-async function addEmployee(firstName, lastName, roleId, managerId) {
-    const [result] = await pool.query('INSERT INTO employee SET ?', { first_name: firstName, last_name: lastName, role_id: roleId, manager_id: managerId });
+async function addEmployees(firstName, lastName, rolesId, managersId) {
+    const [result] = await pool.query('INSERT INTO employees SET ?', { first_name: firstName, last_name: lastName, roles_id: rolesId, managers_id: managersId });
         return result.insertId;
 }
 
-async function updateEmployeeRole(employeeId, roleId) {
-    const [result] = await pool.query('UPDATE employee SET role_id = ? WHERE id = ?', [roleId, employeeId]);
+async function updateEmployeeRole(employeesId, rolesId) {
+    const [result] = await pool.query('UPDATE employees SET role_id = ? WHERE id = ?', [rolesId, employeesId]);
         return result.affectedRows > 0;
 }   
 
-module.exports = { getAllDepartments, getAllRoles, getAllEmployees, addDepartment, addRole, addEmployee, updateEmployeeRole };
+async function deleteDepartments(departmentsId) {
+    const [result] = await pool.query('DELETE FROM departments WHERE id = ?', [departmentsId]);
+    return result.affectedRows > 0;
+}
+
+async function deleteRoles(rolesId) {
+    const [result] = await pool.query('DELETE FROM roles WHERE id = ?', [rolesId]);
+    return result.affectedRows > 0;
+}
+
+async function deleteEmployees(employeesId) {
+    const [result] = await pool.query('DELETE FROM employees WHERE id = ?', [employeesId]);
+    return result.affectedRows > 0;
+}
+
+
+module.exports = { getAllDepartments, getAllRoles, getAllEmployees, addDepartments, addRoles, addEmployees, updateEmployeeRole, deleteDepartments, deleteRoles, deleteEmployees };

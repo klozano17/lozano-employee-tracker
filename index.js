@@ -3,8 +3,6 @@ const mysql = require('mysql2');
 require("console.table");
 const queries = require('./queries/queries.js');
 
-
-
 const db = mysql.createConnection({
     host: "127.0.0.1",
     port: 3306,
@@ -33,6 +31,10 @@ function mainMenu() {
             "Add a role",
             "Add a department",
             "Update an employee role",
+            "Delete a Department",
+            "Delete a Role",
+            "Delete an Employee",
+            "Exit",
         ],
         },
     ])
@@ -48,16 +50,25 @@ function mainMenu() {
                 viewDepartments();
                 break;
             case "Add an employee":
-                addEmployee();
+                addEmployees();
                 break;
             case "Add a role":
-                addRole();
+                addRoles();
                 break;
             case "Add a department":
-                addDepartment();
+                addDepartments();
                 break;
             case "Update an employee role":
                 updateEmployeeRole();
+                break;
+            case "Delete a Department":
+                deleteDepartments();
+                break;
+            case "Delete a Role":
+                deleteRoles();
+                break;
+            case "Delete an Employee":
+                deleteEmployees();
                 break;
             default:
                 console.log("Invalid option");
@@ -92,7 +103,7 @@ function viewDepartments() {
 }
 
 
-function addEmployee() {
+function addEmployees() {
     inquirer.prompt([
     {
         type: "input",
@@ -117,7 +128,7 @@ function addEmployee() {
     ])
     .then((answers) => {
         db.query(
-        "INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)",
+        "INSERT INTO employees (first_name, last_name, roles_id, managers_id) VALUES (?, ?, ?, ?)",
         [
         answers.firstName,
         answers.lastName,
@@ -136,7 +147,7 @@ function addEmployee() {
 }
 
 
-function addRole() {
+function addRoles() {
     inquirer.prompt([
         {
             type: "input",
@@ -156,8 +167,8 @@ function addRole() {
     ])
     .then((answers) => {
         db.query(
-            "INSERT INTO roles (title, salary, department_id) VALUES (?, ?, ?)",
-            [answers.title, answers.salary, answers.departmentId],
+            "INSERT INTO roles (title, salary, departments_id) VALUES (?, ?, ?)",
+            [answers.title, answers.salary, answers.departmentsId],
             (err, res) => {
             if (err) throw err;
                 console.log(`${answers.title} added to the database`);
@@ -167,7 +178,7 @@ function addRole() {
     });
 }
 
-function addDepartment() {
+function addDepartments() {
     inquirer.prompt([
         {
             type: "input",
@@ -192,28 +203,28 @@ function updateEmployeeRole() {
     db.query("SELECT * FROM employees", (err, employees) => {
         if (err) throw err;
     
-        const employeeChoices = employees.map((employee) => ({
-            name: `${employee.first_name} ${employee.last_name}`,
-            value: employee.id,
+        const employeeChoices = employees.map((employees) => ({
+            name: `${employees.first_name} ${employees.last_name}`,
+            value: employees.id,
     }));
 
     inquirer.prompt([
         {
             type: "list",
-            name: "employeeId",
+            name: "employeesId",
             message: "Which employee's role do you want to update?",
             choices: employeeChoices,
         },
         {
             type: "input",
-            name: "roleId",
+            name: "rolesId",
             message: "Enter the new role ID:",
         },
         ])
         .then((answers) => {
             db.query(
-                "UPDATE employees SET role_id = ? WHERE id = ?",
-                [answers.roleId, answers.employeeId],
+                "UPDATE employees SET roles_id = ? WHERE id = ?",
+                [answers.rolesId, answers.employeesId],
                 (err, res) => {
                     if (err) throw err;
                     console.log("Employee role updated");
@@ -224,3 +235,93 @@ function updateEmployeeRole() {
     });
 }
 
+
+async function deleteDepartments() {
+    try {
+        const departments = await queries.getAllDepartments();
+        const departmentChoices = departments.map((departments) => ({
+            name: departments.name,
+            value: departments.id,
+        }));
+
+        const answers = await inquirer.prompt([
+            {
+                type: "list",
+                name: "departmentsId",
+                message: "Select the departments to delete:",
+                choices: departmentChoices,
+            },
+        ]);
+
+        const deleted = await queries.deleteDepartments(answers.departmentsId);
+        if (deleted) {
+            console.log("Department deleted");
+        } else {
+            console.log("Failed to delete department");
+        }
+    } catch (err) {
+        console.error(err);
+    }
+
+    mainMenu();
+}
+
+async function deleteRoles() {
+    try {
+        const roles = await queries.getAllRoles();
+        const roleChoices = roles.map((roles) => ({
+            name: roles.title,
+            value: roles.id,
+        }));
+
+        const answers = await inquirer.prompt([
+            {
+                type: "list",
+                name: "rolesId",
+                message: "Select the role to delete:",
+                choices: roleChoices,
+            },
+        ]);
+
+        const deleted = await queries.deleteRoles(answers.rolesId);
+        if (deleted) {
+            console.log("Role deleted");
+        } else {
+            console.log("Failed to delete role");
+        }
+    } catch (err) {
+        console.error(err);
+    }
+
+    mainMenu();
+}
+
+async function deleteEmployees() {
+    try {
+        const employees = await queries.getAllEmployees();
+        const employeeChoices = employees.map((employees) => ({
+            name: `${employees.first_name} ${employees.last_name}`,
+            value: employees.id,
+        }));
+
+        const answers = await inquirer.prompt([
+            {
+                type: "list",
+                name: "employeesId",
+                message: "Select the employee to delete:",
+                choices: employeeChoices,
+            },
+        ]);
+
+        const deleted = await queries.deleteEmployees(answers.employeesId);
+        if (deleted) {
+            console.log("Employee deleted");
+        } else {
+            console.log("Failed to delete employee");
+        }
+    } catch (err) {
+        console.error(err);
+    }
+
+    mainMenu();
+}
