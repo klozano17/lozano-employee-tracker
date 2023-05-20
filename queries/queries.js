@@ -1,4 +1,4 @@
-/*  const mysql = require('mysql2/promise');
+const mysql = require('mysql2/promise');
 
 // Create connection pool
 const pool = mysql.createPool({
@@ -57,4 +57,4 @@ async function updateEmployeeRole(employeeId, roleId) {
         return result.affectedRows > 0;
 }   
 
-module.exports = { getAllDepartments, getAllRoles, getAllEmployees, addDepartment, addRole, addEmployee, updateEmployeeRole };*/
+module.exports = { getAllDepartments, getAllRoles, getAllEmployees, addDepartment, addRole, addEmployee, updateEmployeeRole };

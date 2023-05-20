@@ -1,5 +1,5 @@
 -- Departments table
-INSERT INTO department (name) 
+INSERT INTO departments (name) 
 VALUES
 ('Sales'),
 ('Engineering'),
@@ -8,7 +8,7 @@ VALUES
 ('Legal');
 
 -- Roles table
-INSERT INTO role (title, salary, department_id) 
+INSERT INTO roles (title, salary, departments_id) 
 VALUES
 ('Salesperson', 50000, 1),
 ('Sales Lead', 75000, 1),
@@ -22,7 +22,7 @@ VALUES
 ('Legal Assistant', 40000, 5);
 
 -- Employees table
-INSERT INTO employee (first_name, last_name, role_id, manager_id) 
+INSERT INTO employees (first_name, last_name, roles_id, managers_id) 
 VALUES
 ('John', 'Doe', 3, NULL),
 ('Jane', 'Doe', 2, 1),

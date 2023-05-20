@@ -1,7 +1,9 @@
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
 require("console.table");
-//const queries = require('./queries/queries.js');
+const queries = require('./queries/queries.js');
+
+
 
 const db = mysql.createConnection({
     host: "127.0.0.1",
@@ -119,8 +121,8 @@ function addEmployee() {
         [
         answers.firstName,
         answers.lastName,
-        answers.roleId,
-        answers.managerId || null,
+        answers.rolesId,
+        answers.managersId || null,
         ],
         (err, res) => {
             if (err) throw err;
@@ -164,7 +166,6 @@ function addRole() {
         );
     });
 }
-
 
 function addDepartment() {
     inquirer.prompt([
